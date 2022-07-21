@@ -17,29 +17,13 @@ function setup(){
     imageMode(CENTER);
 
     let canvas = createCanvas(innerWidth,innerHeight);
-
-    buttonLeft = createImg('assets/ButtonLeft.png');
-    buttonLeft.position(width/2-80, height-85);
-    buttonLeft.mousePressed(CDirectionL);
-
-    buttonRight = createImg('assets/ButtonRight.png');
-    buttonRight.position(width/2, height-85);
-    buttonRight.mousePressed(CDirectionR);
-
+    let canon = new Canon(canonDirection, width/2, height-100, imgCanon);
 
 };
     
-function CDirectionL(){
-    canonDirection -= 1;
-}
-function CDirectionR(){
-    canonDirection += 1;
-}
-
 
 function draw(){
     background(50);
-    let canon = new Canon(canonDirection, width/2, height-100, imgCanon);
     
 
     fill(150);
@@ -52,20 +36,54 @@ function draw(){
     fill(255)
     text((round(canonDirection)+'°') , width/2, height/2);
 
+    rect(width/2, height-50, 80);
+    rect(width/2 + 100, height-50, 80);
+    rect(width/2 - 100, height-50, 80);
     
-    {
-        // 107 and 187 are keyCodes for "+"
-        if (keyIsDown(LEFT_ARROW)) {
-            if (canonDirection > 0)
-            canonDirection -= 0.3;
-        }
-      
-        // 109 and 189 are keyCodes for "-"
-        if (keyIsDown(RIGHT_ARROW)) {
-            if (canonDirection < 180)
-            canonDirection += 0.3;
-        }
+    if (keyIsDown(LEFT_ARROW)) {
+        if (canonDirection > 0)
+        canonDirection -= 0.3;
     }
-};
+      
+    if (keyIsDown(RIGHT_ARROW)) {
+        if (canonDirection < 180)
+        canonDirection += 0.3;
+    }
+
+    const buC = width/2;
+    const buH = height-50;
+
+    if (mouseIsPressed == true && 
+        mouseX >= buC - 40 &&
+        mouseX <= buC + 40 &&
+        mouseY >= buH - 40 &&
+        mouseY <= buH + 40)
+        {
+        
+        }
+
+    if (canonDirection > 0 &&
+        mouseIsPressed == true && 
+        mouseX >= buC - 40 -100 &&
+        mouseX <= buC + 40 -100 &&
+        mouseY >= buH - 40 &&
+        mouseY <= buH + 40)
+        {
+        canonDirection -= 0.3;
+        }
+
+    if (canonDirection < 180 &&
+        mouseIsPressed == true && 
+        mouseX >= buC - 40 +100 &&
+        mouseX <= buC + 40 +100 &&
+        mouseY >= buH - 40 &&
+        mouseY <= buH + 40)
+        {
+        canonDirection += 0.3;
+        }   
+    
+}
+
+
 
 
