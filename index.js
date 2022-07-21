@@ -4,6 +4,9 @@ let buttonRight;
 let buttonMiddle;
 let imgLeft;
 let canonDirection = 90;
+let canonX = 0;
+let canonY = 100;
+
 
 function preload() {
     imgLeft = loadImage('assets/ButtonLeft.png');
@@ -17,14 +20,16 @@ function setup(){
     imageMode(CENTER);
 
     let canvas = createCanvas(innerWidth,innerHeight);
-    let canon = new Canon(canonDirection, width/2, height-100, imgCanon);
+    let canon = new Canon(canonDirection, width/2, height-100);
 
 };
     
-
 function draw(){
     background(50);
     
+    stroke(255);
+    strokeWeight(20);
+    drawLine(canonDirection);
 
     fill(150);
     noStroke();
@@ -32,9 +37,9 @@ function draw(){
     fill(100);
     rect(width/2, height, width, 200);
 
-    textSize(50);
+    textSize(height/20);
     fill(255)
-    text((round(canonDirection)+'°') , width/2, height/2);
+    text((round(canonDirection)) , width/2, height-110);
 
     rect(width/2, height-50, 80);
     rect(width/2 + 100, height-50, 80);
@@ -84,6 +89,18 @@ function draw(){
     
 }
 
+function drawLine(angle){
+    
+    const rad = (angle+180)/180* Math.PI
+
+    let x0 = width/2;
+    let y0 = height-100;
+
+    let x1 = width/2 + height/9 * Math.cos(rad);
+    let y1 = height-100 + height/9 * Math.sin(rad);
+
+    line(x0,y0,x1,y1);
+}
 
 
 
