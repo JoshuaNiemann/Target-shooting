@@ -8,9 +8,7 @@ class Canon {
     }
 
     display(){
-        rect(width/2, height/2, 100,100);
+        line(width/2, height/2, 100,100);
     }
-    update(){
-        rect(width/2, height/2, 200, 200);
-    }
+
 }
