@@ -1,14 +1,15 @@
 class Canon {
 
-    constructor(direction, cX, cY, img){
+    constructor(direction, cX, cY){
         this.direction = direction;
         this.x = cX
         this.y = cY
-        this.img = img;
     }
 
     display(){
-        line(width/2, height/2, 100,100);
+        stroke(255);
+        strokeWeight(50);
+        line(width/2, height/2, width/2+500, height/2+500);
     }
 
 }
