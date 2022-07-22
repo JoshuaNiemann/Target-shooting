@@ -7,13 +7,15 @@ let imgLeft;
 let canonDirection = 90;
 let canonX = 0;
 let canonY = 100;
-
 let projIsShooting = false;
-let projIsFlying = false;
+let projLifeTime = 0;
+let projsize = 5;
 let projX;
 let projY;
 let projSpeedX; 
 let projSpeedY;
+let speedDirectionX;
+let speedDirectionY;
 
 //--------------------------------------------------------------------------
 function preload() {
@@ -28,7 +30,7 @@ function setup(){
 
     let canvas = createCanvas(innerWidth,innerHeight);
     projX = width/2;
-    projY = height/2;
+    projY = height-100;
     projSpeedX = 5;
     projSpeedY = 5;
 };
@@ -54,10 +56,10 @@ function draw(){
     rect(width/2 + 100, height-50, 80);
     rect(width/2 - 100, height-50, 80);
     
-    if (projIsShooting == true || projIsFlying == true){
+    if (projIsShooting == true){
         drawProj();
-        projIsShooting = false;
     }
+
 
     if (keyIsDown(UP_ARROW)) {
         if (canonDirection > 0)
@@ -77,13 +79,26 @@ function draw(){
     const buC = width/2;
     const buH = height-50;
 
-    if (projIsFlying == false && 
+    if (projIsShooting == false && 
         mouseIsPressed == true &&
         mouseX >= buC - 40 &&
         mouseX <= buC + 40 &&
         mouseY >= buH - 40 &&
         mouseY <= buH + 40)
         {
+            const rad = (canonDirection+180)/180* Math.PI
+
+            speedDirectionX = width/2 + 5 * Math.cos(rad);
+            speedDirectionY = height-100 + 5 * Math.sin(rad);
+            if (canonDirection <= 90){
+                projSpeedX = speedDirectionX - width/2;
+                projSpeedY = (height-100) - speedDirectionY;
+            } else if (canonDirection >= 90){
+                projSpeedX = speedDirectionX - width/2;
+                projSpeedY = (height-100) - speedDirectionY;
+            }
+
+
             projIsShooting = true;
         }
 
@@ -126,15 +141,29 @@ function drawLine(angle){
 
 
 function drawProj() {
-    
-    projIsFlying == true;
-
-    for (let i = 0; i < 1000; i){
-        rect(projX, projY, 5, 5)
-        projX = projX + projSpeedX;
-        projY = projY + projSpeedY;
+    rect(projX, projY, projsize, projsize);
+    projX = projX + projSpeedX;
+    projY = projY - projSpeedY;
+    if (projX + projsize/2 >= width || projX - projsize/2 <= 0){
+        projSpeedX = projSpeedX * -1;
+    }
+    if (projY + projsize/2 >= height-100 || projY - projsize/2 <= 0){
+        projSpeedY = projSpeedY * -1;
     }
     
+
+    projLifeTime ++;
+
+    if (projLifeTime == 300){
+        projX = width/2;
+        projY = height-100;
+        projLifeTime = 0;
+        projIsShooting = false;
+    }
+
+
+
+   
 
 }
 
