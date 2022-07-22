@@ -87,10 +87,11 @@ function draw(){
     rect(width/2 - 100, height-50, 80);
 
     //scoreboard
+    textAlign(CORNER);
     textSize(height/40);
     fill(255)
-    text("score"+ score, width/2, height-110);
-    
+    text("score: "+ score, height/15, height/30);
+    textAlign(CENTER);
 
 
     if (keyIsDown(UP_ARROW)) {
