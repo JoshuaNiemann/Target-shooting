@@ -26,7 +26,7 @@ let wallheight;
 let hit = false;
 let score = 0;
 
-const sound1 = new Audio('assets/Audio/beep1.mp3');
+const sound1 = new Audio('assets/Audio/beep2.wav');
 //------------------------------------------------
 
 
@@ -207,12 +207,12 @@ function drawProj() {
     projY = projY - (projSpeedY * projSpeedMulti);
     if (projX + projsize/2 >= width || projX - projsize/2 <= 0){
         projSpeedX = projSpeedX * -1;
-        
+        sound1.pause();
         sound1.play();
     }
     if (projY + projsize/2 >= height-100 || projY - projsize/2 <= wallheight){
         projSpeedY = projSpeedY * -1;
-        
+        sound1.pause();
         sound1.play();
     }
     if (projX + projsize/2 >= targetX && projX -projsize/2 <= targetX + targetwidth &&
