@@ -34,11 +34,14 @@ let sound1;
 function preload() {
     imgLeft = loadImage('assets/ButtonLeft.png');
     imgRight = loadImage('assets/ButtonRight.png');
-    sound1 = loadSound('assets/Audio/beep2.wav')
+    
     
 }
 
 function setup(){
+    sound1 = loadSound('assets/Audio/beep2.wav');
+    sound1.playMode('sustain');
+
     rectMode(CENTER);
     textAlign(CENTER);
     imageMode(CENTER);
