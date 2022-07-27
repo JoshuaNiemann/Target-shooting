@@ -9,6 +9,7 @@ let canonX = 0;
 let canonY = 100;
 let projIsShooting = false;
 let projLifeTime = 0;
+let projLifeTimeMax = 500
 let projsize = 5;
 let projX;
 let projY;
@@ -16,6 +17,7 @@ let projSpeedX;
 let projSpeedY;
 let speedDirectionX;
 let speedDirectionY;
+let projSpeedMulti = 2;
 let targetX;
 let targetY;
 let targetwidth;
@@ -24,6 +26,40 @@ let wallheight;
 let hit = false;
 let score = 0;
 
+const particles = []
+let parsize;
+let parlength;
+let parDirectionX;
+let parDirectionY;
+let parSpeedX; 
+let parSpeedY;
+//------------------------------------------------
+class Particles {
+    constructor(direction, x, y) {
+        this.direction = direction;
+        this.x = x;
+        this.y = y;
+
+    }
+    display() {
+        noStroke();
+        circle(this.x, this.y, parsize);
+
+
+    }
+    update(){
+        parDirectionX = width/2 + 5 * Math.cos(rad);
+        parDirectionY = height-100 + 5 * Math.sin(rad);
+            if (canonDirection <= 90){
+                parSpeedX = parDirectionX - width/2;
+                parSpeedY = (height-100) - parDirectionY;
+            } else if (canonDirection >= 90){
+                parSpeedX = parDirectionX - width/2;
+                parSpeedY = (height-100) - parDirectionY;
+            }
+
+    }
+}
 
 //--------------------------------------------------------------------------
 function preload() {
@@ -41,6 +77,8 @@ function setup(){
     projY = height-100;
     projSpeedX = 5;
     projSpeedY = 5;
+    parSpeedX = 5;
+    parSpeedY = 5;
     wallheight = height/20
     newTarget()
 
@@ -149,7 +187,7 @@ function draw(){
             projIsShooting = true;
         }
 
-    if (canonDirection > 0 &&
+    if (canonDirection > 15 &&
         mouseIsPressed == true && 
         mouseX >= buC - 40 -100 &&
         mouseX <= buC + 40 -100 &&
@@ -159,7 +197,7 @@ function draw(){
         canonDirection -= 0.3;
         }
 
-    if (canonDirection < 180 &&
+    if (canonDirection < 165 &&
         mouseIsPressed == true && 
         mouseX >= buC - 40 +100 &&
         mouseX <= buC + 40 +100 &&
@@ -189,8 +227,8 @@ function drawLine(angle){
 
 function drawProj() {
     rect(projX, projY, projsize, projsize);
-    projX = projX + projSpeedX;
-    projY = projY - projSpeedY;
+    projX = projX + (projSpeedX * projSpeedMulti);
+    projY = projY - (projSpeedY * projSpeedMulti);
     if (projX + projsize/2 >= width || projX - projsize/2 <= 0){
         projSpeedX = projSpeedX * -1;
     }
@@ -200,13 +238,13 @@ function drawProj() {
     if (projX + projsize/2 >= targetX && projX -projsize/2 <= targetX + targetwidth &&
         projY -projsize/2 >= targetY && projY -projsize/2 <= targetY + targetheight) {
             hit = true;
-            projLifeTime =300
+            projLifeTime = projLifeTimeMax
         }
     
 
     projLifeTime ++;
 
-    if (projLifeTime >= 300){
+    if (projLifeTime >= projLifeTimeMax){
         if (hit == true){
             score += 1
             hit = false
