@@ -26,8 +26,7 @@ let wallheight;
 let hit = false;
 let score = 0;
 
-const sound1 = new Audio('assets/Audio/beep2.wav');
-const sound1_2 = new Audio('assets/Audio/beep2_2.wav');
+let sound1;
 //------------------------------------------------
 
 
@@ -35,6 +34,7 @@ const sound1_2 = new Audio('assets/Audio/beep2_2.wav');
 function preload() {
     imgLeft = loadImage('assets/ButtonLeft.png');
     imgRight = loadImage('assets/ButtonRight.png');
+    sound1 = loadSound('assets/Audio/beep2.wav')
     
 }
 
@@ -208,12 +208,10 @@ function drawProj() {
     projY = projY - (projSpeedY * projSpeedMulti);
     if (projX + projsize/2 >= width || projX - projsize/2 <= 0){
         projSpeedX = projSpeedX * -1;
-        sound1.pause();
         sound1.play();
     }
     if (projY + projsize/2 >= height-100 || projY - projsize/2 <= wallheight){
         projSpeedY = projSpeedY * -1;
-        sound1.pause();
         sound1.play();
     }
     if (projX + projsize/2 >= targetX && projX -projsize/2 <= targetX + targetwidth &&
