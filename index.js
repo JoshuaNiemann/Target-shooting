@@ -17,7 +17,7 @@ let projSpeedX;
 let projSpeedY;
 let speedDirectionX;
 let speedDirectionY;
-let projSpeedMulti = 1;
+let projSpeedMulti = 2;
 let targetX;
 let targetY;
 let targetwidth;
@@ -26,13 +26,7 @@ let wallheight;
 let hit = false;
 let score = 0;
 
-let aimSpeedX;
-let aimSpeedY;
-let aimLineX;
-let aimLineY;
-let aimLineSize = 50;
-let aimMulti = 50;
-
+let sound1;
 //------------------------------------------------
 
 
@@ -40,6 +34,7 @@ let aimMulti = 50;
 function preload() {
     imgLeft = loadImage('assets/ButtonLeft.png');
     imgRight = loadImage('assets/ButtonRight.png');
+    sound1 = new Audio('assets/Audio/beep1.mp3');
 }
 
 function setup(){
@@ -53,8 +48,6 @@ function setup(){
     projY = height-100;
     projSpeedX = 5;
     projSpeedY = 5;
-    parSpeedX = 5;
-    parSpeedY = 5;
     wallheight = height/20;
 
     newTarget()
@@ -69,17 +62,7 @@ function draw(){
     if (projIsShooting == true){
         drawProj();
     }else{
-    //aimLine
-    let aimRad = (aimDirection+180)/180* Math.PI;
-
-    let aimSpeedDirectionX = width/2 + 5 * Math.cos(aimRad);
-    let aimSpeedDirectionY = (height-100) + 5 * Math.sin(aimRad);
-    if (canonDirection <= 90||canonDirection >= 90){
-        aimSpeedX = aimSpeedDirectionX - width/2;
-        aimSpeedY = (height-100) - aimSpeedDirectionY;
-    }
     
-    drawAimLine()
     }
 
     //canon
@@ -141,8 +124,6 @@ function draw(){
 
 
             projIsShooting = true;
-            projX = width/2;
-            projY = height-100;
         }
     }
 
@@ -180,8 +161,6 @@ function draw(){
 
 
             projIsShooting = true;
-            projX = width/2;
-            projY = height-100;
         }
 
     if (canonDirection > 15 &&
@@ -221,17 +200,6 @@ function drawLine(angle){
     line(x0,y0,x1,y1);
 }
 
-function drawAimLine(){
-    
-    
-
-    for (let i = 0; i < 10; i ++){
-        aimLineX = aimLineX + aimSpeedX;
-        aimLineY = aimLineY - aimSpeedY;
-    }
-    circle(aimLineX, aimLineY, aimLineSize);
-}
-
 
 function drawProj() {
     circle(projX, projY, projsize, projsize);
@@ -239,9 +207,13 @@ function drawProj() {
     projY = projY - (projSpeedY * projSpeedMulti);
     if (projX + projsize/2 >= width || projX - projsize/2 <= 0){
         projSpeedX = projSpeedX * -1;
+        sound1.play();
+        sound1.loop = false;
     }
     if (projY + projsize/2 >= height-100 || projY - projsize/2 <= wallheight){
         projSpeedY = projSpeedY * -1;
+        sound1.play();
+        sound1.loop = false;
     }
     if (projX + projsize/2 >= targetX && projX -projsize/2 <= targetX + targetwidth &&
         projY -projsize/2 >= targetY && projY -projsize/2 <= targetY + targetheight) {
