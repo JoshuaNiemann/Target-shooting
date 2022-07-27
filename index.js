@@ -17,7 +17,7 @@ let projSpeedX;
 let projSpeedY;
 let speedDirectionX;
 let speedDirectionY;
-let projSpeedMulti = 2;
+let projSpeedMulti = 3;
 let targetX;
 let targetY;
 let targetwidth;
@@ -27,6 +27,7 @@ let hit = false;
 let score = 0;
 
 const sound1 = new Audio('assets/Audio/beep2.wav');
+const sound1_2 = new Audio('assets/Audio/beep2_2.wav');
 //------------------------------------------------
 
 
@@ -202,7 +203,7 @@ function drawLine(angle){
 
 
 function drawProj() {
-    circle(projX, projY, projsize, projsize);
+    circle(projX, projY, projsize);
     projX = projX + (projSpeedX * projSpeedMulti);
     projY = projY - (projSpeedY * projSpeedMulti);
     if (projX + projsize/2 >= width || projX - projsize/2 <= 0){
