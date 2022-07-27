@@ -10,14 +10,14 @@ let canonY = 100;
 let projIsShooting = false;
 let projLifeTime = 0;
 let projLifeTimeMax = 500
-let projsize = 5;
+let projsize = 15;
 let projX;
 let projY;
 let projSpeedX; 
 let projSpeedY;
 let speedDirectionX;
 let speedDirectionY;
-let projSpeedMulti = 2;
+let projSpeedMulti = 1;
 let targetX;
 let targetY;
 let targetwidth;
@@ -26,7 +26,12 @@ let wallheight;
 let hit = false;
 let score = 0;
 
-const particles = []
+let aimSpeedX;
+let aimSpeedY;
+let aimLineX;
+let aimLineY;
+let aimLineSize = 50;
+let aimMulti = 50;
 
 //------------------------------------------------
 
@@ -41,6 +46,7 @@ function setup(){
     rectMode(CENTER);
     textAlign(CENTER);
     imageMode(CENTER);
+    colorMode(RGB, 255, 255, 255, 1);
 
     let canvas = createCanvas(innerWidth,innerHeight);
     projX = width/2;
@@ -50,6 +56,7 @@ function setup(){
     parSpeedX = 5;
     parSpeedY = 5;
     wallheight = height/20;
+
     newTarget()
 
 };
@@ -62,9 +69,19 @@ function draw(){
     if (projIsShooting == true){
         drawProj();
     }else{
-        drawAimLine();
+    //aimLine
+    let aimRad = (aimDirection+180)/180* Math.PI;
+
+    let aimSpeedDirectionX = width/2 + 5 * Math.cos(aimRad);
+    let aimSpeedDirectionY = (height-100) + 5 * Math.sin(aimRad);
+    if (canonDirection <= 90||canonDirection >= 90){
+        aimSpeedX = aimSpeedDirectionX - width/2;
+        aimSpeedY = (height-100) - aimSpeedDirectionY;
     }
     
+    drawAimLine()
+    }
+
     //canon
     stroke(255);
     strokeWeight(20);
@@ -108,43 +125,8 @@ function draw(){
 
     if (keyIsDown(UP_ARROW)) {
         if (projIsShooting == false){
-         const rad = (canonDirection+180)/180* Math.PI
-
-            speedDirectionX = width/2 + 5 * Math.cos(rad);
-            speedDirectionY = height-100 + 5 * Math.sin(rad);
-            if (canonDirection <= 90){
-                projSpeedX = speedDirectionX - width/2;
-                projSpeedY = (height-100) - speedDirectionY;
-            } else if (canonDirection >= 90){
-                projSpeedX = speedDirectionX - width/2;
-                projSpeedY = (height-100) - speedDirectionY;
-            }
-
-
-            projIsShooting = true;
-        }
-    }
-
-    if (keyIsDown(LEFT_ARROW)) {
-        if (canonDirection > 0)
-        canonDirection -= 0.3;
-    }
-      
-    if (keyIsDown(RIGHT_ARROW)) {
-        if (canonDirection < 180)
-        canonDirection += 0.3;
-    }
-
-    const buC = width/2;
-    const buH = height-50;
-
-    if (projIsShooting == false && 
-        mouseIsPressed == true &&
-        mouseX >= buC - 40 &&
-        mouseX <= buC + 40 &&
-        mouseY >= buH - 40 &&
-        mouseY <= buH + 40)
-        {
+            
+         
             const rad = (canonDirection+180)/180* Math.PI
 
             speedDirectionX = width/2 + 5 * Math.cos(rad);
@@ -159,6 +141,47 @@ function draw(){
 
 
             projIsShooting = true;
+            projX = width/2;
+            projY = height-100;
+        }
+    }
+
+    if (keyIsDown(LEFT_ARROW)) {
+        if (canonDirection > 15)
+        canonDirection -= 0.3;
+    }
+      
+    if (keyIsDown(RIGHT_ARROW)) {
+        if (canonDirection < 165)
+        canonDirection += 0.3;
+    }
+
+    const buC = width/2;
+    const buH = height-50;
+
+    if (projIsShooting == false && 
+        mouseIsPressed == true &&
+        mouseX >= buC - 40 &&
+        mouseX <= buC + 40 &&
+        mouseY >= buH - 40 &&
+        mouseY <= buH + 40)
+        {   
+            const rad = (canonDirection+180)/180* Math.PI
+
+            speedDirectionX = width/2 + 5 * Math.cos(rad);
+            speedDirectionY = height-100 + 5 * Math.sin(rad);
+            if (canonDirection <= 90){
+                projSpeedX = speedDirectionX - width/2;
+                projSpeedY = (height-100) - speedDirectionY;
+            } else if (canonDirection >= 90){
+                projSpeedX = speedDirectionX - width/2;
+                projSpeedY = (height-100) - speedDirectionY;
+            }
+
+
+            projIsShooting = true;
+            projX = width/2;
+            projY = height-100;
         }
 
     if (canonDirection > 15 &&
@@ -199,22 +222,19 @@ function drawLine(angle){
 }
 
 function drawAimLine(){
+    
+    
 
-    let aimSpeedDirectionX;
-    let aimSpeedDirectionY;
-    const aimRad = (canonDirection+180)/180* Math.PI;
-
-    aimSpeedDirectionX = width/2 + 5 * Math.cos(aimRad);
-    aimSpeedDirectionY = (height-100) + 5 * Math.sin(aimRad);
-    if (canonDirection <= 90 || canonDirection >= 90){
-        
+    for (let i = 0; i < 10; i ++){
+        aimLineX = aimLineX + aimSpeedX;
+        aimLineY = aimLineY - aimSpeedY;
     }
-
+    circle(aimLineX, aimLineY, aimLineSize);
 }
 
 
 function drawProj() {
-    rect(projX, projY, projsize, projsize);
+    circle(projX, projY, projsize, projsize);
     projX = projX + (projSpeedX * projSpeedMulti);
     projY = projY - (projSpeedY * projSpeedMulti);
     if (projX + projsize/2 >= width || projX - projsize/2 <= 0){
