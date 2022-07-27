@@ -27,39 +27,9 @@ let hit = false;
 let score = 0;
 
 const particles = []
-let parsize;
-let parlength;
-let parDirectionX;
-let parDirectionY;
-let parSpeedX; 
-let parSpeedY;
+
 //------------------------------------------------
-class Particles {
-    constructor(direction, x, y) {
-        this.direction = direction;
-        this.x = x;
-        this.y = y;
 
-    }
-    display() {
-        noStroke();
-        circle(this.x, this.y, parsize);
-
-
-    }
-    update(){
-        parDirectionX = width/2 + 5 * Math.cos(rad);
-        parDirectionY = height-100 + 5 * Math.sin(rad);
-            if (canonDirection <= 90){
-                parSpeedX = parDirectionX - width/2;
-                parSpeedY = (height-100) - parDirectionY;
-            } else if (canonDirection >= 90){
-                parSpeedX = parDirectionX - width/2;
-                parSpeedY = (height-100) - parDirectionY;
-            }
-
-    }
-}
 
 //--------------------------------------------------------------------------
 function preload() {
@@ -79,16 +49,20 @@ function setup(){
     projSpeedY = 5;
     parSpeedX = 5;
     parSpeedY = 5;
-    wallheight = height/20
+    wallheight = height/20;
     newTarget()
 
 };
 //--------------------------------------------------------------------------    
 function draw(){
     background(50);
+    
+
 
     if (projIsShooting == true){
         drawProj();
+    }else{
+        drawAimLine();
     }
     
     //canon
@@ -222,6 +196,20 @@ function drawLine(angle){
     let y1 = height-100 + height/9 * Math.sin(rad);
 
     line(x0,y0,x1,y1);
+}
+
+function drawAimLine(){
+
+    let aimSpeedDirectionX;
+    let aimSpeedDirectionY;
+    const aimRad = (canonDirection+180)/180* Math.PI;
+
+    aimSpeedDirectionX = width/2 + 5 * Math.cos(aimRad);
+    aimSpeedDirectionY = (height-100) + 5 * Math.sin(aimRad);
+    if (canonDirection <= 90 || canonDirection >= 90){
+        
+    }
+
 }
 
 
