@@ -26,13 +26,15 @@ let wallheight;
 let hit = false;
 let bouncemultiplier = 1;
 let score = 0;
-let highscore = 0
-let life = 3
+let highscore = 0;
+
+let life = 3;
 let gamewidth;
 
 let startpage = false;
 let gameover = false;
 let ingame = true;
+
 
 //------------------------------------------------
 
@@ -52,7 +54,6 @@ function setup(){
     textAlign(CENTER);
     imageMode(CENTER);
     colorMode(RGB, 255, 255, 255, 1);
-    localStorage
 
     
     let canvas = createCanvas(window.innerWidth, window.innerHeight-7);
@@ -67,7 +68,7 @@ function setup(){
     projSpeedY = 5;
     wallheight = 50;
     const image1 = imgLeft;
-
+    
     newTarget()
 
 };
@@ -75,6 +76,9 @@ function setup(){
 function draw(){
     background(50);
     image(imageBackground, width/2, height/2-500,)
+    if ((localStorage.getItem('highscore')) == null){
+        localStorage.setItem("highscore", 0)
+    }
 
     if (startpage == true && ingame == false && gameover == false){
         drawstartpage();
@@ -138,7 +142,7 @@ function draw(){
     textAlign(CENTER);
     textSize(height/40);
     fill(255)
-    text("highscore: "+ highscore +"   score: "+ score +"   Lifes: "+ life ,width/2, 0+30 );
+    text("highscore: "+ localStorage.getItem('highscore') +"   score: "+ score +"   Lifes: "+ life ,width/2, 0+30 );
     textAlign(CENTER);
 
     
@@ -284,6 +288,9 @@ function drawProj() {
         if (hit == true){
             score += 1 + score*bouncemultiplier;
             hit = false;
+            if (score > localStorage.getItem("highscore")) {
+                localStorage.setItem("highscore", score);
+              }
         } else if(hit == false){
             life -= 1;
             if(life == 0){
