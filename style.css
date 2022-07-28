@@ -1,0 +1,24 @@
+html,body{
+    height: 100%;
+    margin: 0;
+}
+body{
+    font-family: 'Secular One', sans-serif;
+    background-color: rgb(231, 241, 243);
+}
+
+.muster1{
+    
+}
+.headline{
+    color: rgb(197, 38, 38);
+}
+
+.bg{
+    background-image: url("assets/Sketches.png");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    }
