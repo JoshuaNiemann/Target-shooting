@@ -25,8 +25,12 @@ let targetheight;
 let wallheight;
 let hit = false;
 let score = 0;
+let highscore = 0
 
-let sound1;
+let startpage = false;
+let gameover = false;
+let ingame = true;
+
 //------------------------------------------------
 
 
@@ -34,20 +38,20 @@ let sound1;
 function preload() {
     imgLeft = loadImage('assets/ButtonLeft.png');
     imgRight = loadImage('assets/ButtonRight.png');
-    
+    imgBackground = loadImage('assets/Sketches.png');
     
 }
 
 function setup(){
-    sound1 = loadSound('assets/Audio/beep2.wav');
-    sound1.playMode('sustain');
-
     rectMode(CENTER);
     textAlign(CENTER);
     imageMode(CENTER);
     colorMode(RGB, 255, 255, 255, 1);
 
-    let canvas = createCanvas(innerWidth,innerHeight);
+    //if (window.innerHeight < window.innerWidth){
+    //    window.innerWidth = window.innerHeight
+    //}
+    let canvas = createCanvas(window.innerWidth, window.innerHeight-7);
     projX = width/2;
     projY = height-100;
     projSpeedX = 5;
@@ -60,8 +64,11 @@ function setup(){
 //--------------------------------------------------------------------------    
 function draw(){
     background(50);
-    
+    image(imgBackground, width/2, height/2-500,)
 
+    if (startpage==true){
+
+    }else{
 
     if (projIsShooting == true){
         drawProj();
@@ -106,7 +113,7 @@ function draw(){
     textAlign(CORNER);
     textSize(height/40);
     fill(255)
-    text("score: "+ score, height/15, height/30);
+    text("highscore: "+ highscore +"   score: "+ score , height/15, height/30);
     textAlign(CENTER);
 
 
@@ -132,12 +139,12 @@ function draw(){
     }
 
     if (keyIsDown(LEFT_ARROW)) {
-        if (canonDirection > 15)
+        if (canonDirection > 30.5)
         canonDirection -= 0.3;
     }
       
     if (keyIsDown(RIGHT_ARROW)) {
-        if (canonDirection < 165)
+        if (canonDirection < 149.6)
         canonDirection += 0.3;
     }
 
@@ -167,7 +174,7 @@ function draw(){
             projIsShooting = true;
         }
 
-    if (canonDirection > 15 &&
+    if (canonDirection > 30.5 &&
         mouseIsPressed == true && 
         mouseX >= buC - 40 -100 &&
         mouseX <= buC + 40 -100 &&
@@ -177,7 +184,7 @@ function draw(){
         canonDirection -= 0.3;
         }
 
-    if (canonDirection < 165 &&
+    if (canonDirection < 149.6 &&
         mouseIsPressed == true && 
         mouseX >= buC - 40 +100 &&
         mouseX <= buC + 40 +100 &&
@@ -186,7 +193,7 @@ function draw(){
         {
         canonDirection += 0.3;
         }   
-
+    }
 }
 //--------------------------------------------------------------------------
 
@@ -211,16 +218,16 @@ function drawProj() {
     projY = projY - (projSpeedY * projSpeedMulti);
     if (projX + projsize/2 >= width || projX - projsize/2 <= 0){
         projSpeedX = projSpeedX * -1;
-        sound1.play();
+        
     }
     if (projY + projsize/2 >= height-100 || projY - projsize/2 <= wallheight){
         projSpeedY = projSpeedY * -1;
-        sound1.play();
+        
     }
     if (projX + projsize/2 >= targetX && projX -projsize/2 <= targetX + targetwidth &&
         projY -projsize/2 >= targetY && projY -projsize/2 <= targetY + targetheight) {
             hit = true;
-            projLifeTime = projLifeTimeMax
+            projLifeTime = projLifeTimeMax;
         }
     
 
