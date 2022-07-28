@@ -24,8 +24,11 @@ let targetwidth;
 let targetheight;
 let wallheight;
 let hit = false;
+let bouncemultiplier = 1;
 let score = 0;
 let highscore = 0
+let life = 3
+let gamewidth;
 
 let startpage = false;
 let gameover = false;
@@ -36,27 +39,34 @@ let ingame = true;
 
 //--------------------------------------------------------------------------
 function preload() {
-    imgLeft = loadImage('assets/ButtonLeft.png');
-    imgRight = loadImage('assets/ButtonRight.png');
-    imgBackground = loadImage('assets/Sketches.png');
+    imageLeft = loadImage('assets/ButtonLeftNew.png');
+    imageRight = loadImage('assets/ButtonRightNew.png');
+    imageFire = loadImage('assets/ButtonFireNew.png');
+    imageBackground = loadImage('assets/Sketches.png');
     
 }
 
 function setup(){
+    const ctx = document.querySelector('canvas').getContext('2d');
     rectMode(CENTER);
     textAlign(CENTER);
     imageMode(CENTER);
     colorMode(RGB, 255, 255, 255, 1);
+    localStorage
 
-    //if (window.innerHeight < window.innerWidth){
-    //    window.innerWidth = window.innerHeight
-    //}
+    
     let canvas = createCanvas(window.innerWidth, window.innerHeight-7);
+    if(width > height){
+        gamewidth = height;
+    }else if(width < height){
+        gamewidth = width;
+    }
     projX = width/2;
     projY = height-100;
     projSpeedX = 5;
     projSpeedY = 5;
-    wallheight = height/20;
+    wallheight = 50;
+    const image1 = imgLeft;
 
     newTarget()
 
@@ -64,11 +74,13 @@ function setup(){
 //--------------------------------------------------------------------------    
 function draw(){
     background(50);
-    image(imgBackground, width/2, height/2-500,)
+    image(imageBackground, width/2, height/2-500,)
 
-    if (startpage==true){
-
-    }else{
+    if (startpage == true && ingame == false && gameover == false){
+        drawstartpage();
+    }else if (startpage == false && ingame == false && gameover == true){
+        drawgameoverpage()
+    }else if(startpage == false && ingame == true && gameover == false){
 
     if (projIsShooting == true){
         drawProj();
@@ -80,11 +92,11 @@ function draw(){
     stroke(255);
     strokeWeight(20);
     drawLine(canonDirection);
-
-    //taskbar
     fill(150);
     noStroke();
     circle(width/2, height-100, height/6);
+
+    //taskbar
     fill(100);
     rect(width/2, height, width, 200);
 
@@ -92,6 +104,10 @@ function draw(){
     rectMode(CORNER);
     rect(0, 0, width, wallheight);
     rectMode(CENTER);
+
+    //Wall L R
+    rect(width/2-gamewidth/2-10, height/2, 20, height);
+    rect(width/2+gamewidth/2+10, height/2, 20, height);
 
     //Target
     rectMode(CORNER);
@@ -105,16 +121,22 @@ function draw(){
     text((round(canonDirection)) , width/2, height-110);
 
     //buttons
-    rect(width/2, height-50, 80);
-    rect(width/2 + 100, height-50, 80);
-    rect(width/2 - 100, height-50, 80);
-
+    fill(30)
+    ellipse(width/2 - 100, height-35, 85, 60)
+    ellipse(width/2 + 100, height-35, 85, 60)
+    ellipse(width/2, height-38, 100, 70)
+    image(imageFire, width/2, height-60, 100, 100);
+    image(imageRight,width/2 + 100, height-50, 80, 80);
+    image(imageLeft, width/2 - 100, height-50, 80, 80);
+    
     //scoreboard
-    textAlign(CORNER);
+    textAlign(CENTER);
     textSize(height/40);
     fill(255)
-    text("highscore: "+ highscore +"   score: "+ score , height/15, height/30);
+    text("highscore: "+ highscore +"   score: "+ score +"   Lifes: "+ life ,width/2, 0+30 );
     textAlign(CENTER);
+
+    
 
 
     if (keyIsDown(UP_ARROW)) {
@@ -197,6 +219,14 @@ function draw(){
 }
 //--------------------------------------------------------------------------
 
+function drawstartpage(){
+    
+
+}
+function drawgameoverpage(){
+
+
+}
 
 function drawLine(angle){
     
@@ -216,14 +246,20 @@ function drawProj() {
     circle(projX, projY, projsize);
     projX = projX + (projSpeedX * projSpeedMulti);
     projY = projY - (projSpeedY * projSpeedMulti);
-    if (projX + projsize/2 >= width || projX - projsize/2 <= 0){
+    if (projX + projsize/2 >= (width/2+gamewidth/2) || projX - projsize/2 <= (width/2-gamewidth/2)){
         projSpeedX = projSpeedX * -1;
-        
+        bouncemultiplier +=1;
     }
     if (projY + projsize/2 >= height-100 || projY - projsize/2 <= wallheight){
         projSpeedY = projSpeedY * -1;
-        
+        bouncemultiplier +=1;
     }
+
+    if (projX + projsize/2 >= width/2-((height/6)/2) && projX -projsize/2 <= width/2+((height/6)/2) &&
+        projY -projsize/2 >= (height-100)-(height/6)/2 && projY -projsize/2 <= height-100 && bouncemultiplier > 1) {
+            projLifeTime = projLifeTimeMax;
+        }
+
     if (projX + projsize/2 >= targetX && projX -projsize/2 <= targetX + targetwidth &&
         projY -projsize/2 >= targetY && projY -projsize/2 <= targetY + targetheight) {
             hit = true;
@@ -235,23 +271,28 @@ function drawProj() {
 
     if (projLifeTime >= projLifeTimeMax){
         if (hit == true){
-            score += 1
-            hit = false
-        } else if (hit == false){
-            wallheight += height/20
+            score += 1 + score*bouncemultiplier;
+            hit = false;
+        } else if(hit == false){
+            life -= 1;
+            if(life == 0){
+                gameover = true;
+                ingame = false;
+                startpage = false;
+            }
         }
+        bouncemultiplier = 1;
         projX = width/2;
         projY = height-100;
         projLifeTime = 0;
         projIsShooting = false;
-        newTarget()
+        newTarget() 
     }
 }
-
 function newTarget() {
     targetwidth = height/20;
     targetheight = height/40;
-    targetX = random(0, width-targetwidth)
+    targetX = random((width/2)-(gamewidth/2), (width/2)+(gamewidth/2)-targetwidth)
     targetY = wallheight;
 }
 
