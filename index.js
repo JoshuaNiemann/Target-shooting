@@ -96,6 +96,7 @@ function draw(){
     noStroke();
     circle(width/2, height-100, height/6);
 
+    
     //taskbar
     fill(100);
     rect(width/2, height, width, 200);
@@ -106,8 +107,12 @@ function draw(){
     rectMode(CENTER);
 
     //Wall L R
-    rect(width/2-gamewidth/2-10, height/2, 20, height);
-    rect(width/2+gamewidth/2+10, height/2, 20, height);
+    rectMode(CORNER)
+    fill(4)
+    rect(0,0,(width-gamewidth)/2, height)
+    rect(width/2+gamewidth/2+10,0,(width-gamewidth)/2,height)
+    rectMode(CENTER)
+    
 
     //Target
     rectMode(CORNER);
@@ -128,7 +133,7 @@ function draw(){
     image(imageFire, width/2, height-60, 100, 100);
     image(imageRight,width/2 + 100, height-50, 80, 80);
     image(imageLeft, width/2 - 100, height-50, 80, 80);
-    
+
     //scoreboard
     textAlign(CENTER);
     textSize(height/40);
@@ -220,7 +225,13 @@ function draw(){
 //--------------------------------------------------------------------------
 
 function drawstartpage(){
-    
+    fill(30)
+    ellipse(width/2 - 100, height-35, 85, 60)
+    ellipse(width/2 + 100, height-35, 85, 60)
+    ellipse(width/2, height-38, 100, 70)
+    image(imageFire, width/2, height-60, 100, 100);
+    image(imageRight,width/2 + 100, height-50, 80, 80);
+    image(imageLeft, width/2 - 100, height-50, 80, 80);
 
 }
 function drawgameoverpage(){

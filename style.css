@@ -7,12 +7,6 @@ body{
     background-color: rgb(231, 241, 243);
 }
 
-.muster1{
-    
-}
-.headline{
-    color: rgb(197, 38, 38);
-}
 
 .bg{
     background-image: url("assets/Sketches.png");
@@ -22,3 +16,13 @@ body{
     background-size: cover;
     
     }
+
+.logo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    
+    width: 70%;
+    height: 80%;
+}
+
