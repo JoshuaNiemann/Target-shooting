@@ -31,9 +31,9 @@ let highscore = 0;
 let life = 3;
 let gamewidth;
 
-let startpage = false;
+let startpage = true;
 let gameover = false;
-let ingame = true;
+let ingame = false;
 
 let infotextsize = gamewidth/30;
 
@@ -50,6 +50,9 @@ function preload() {
     imageCanon = loadImage('assets/Canon.png');
     imageBullet = loadImage('assets/Bullet.png');
     imageTarget = loadImage('assets/Target.png');
+    imageGameOver = loadImage('assets/GameOver.png');
+    imageHeartEmpty = loadImage('assets/heart empty.png');
+    imageHeartFull = loadImage('assets/heart full.png');
     
 }
 
@@ -104,7 +107,8 @@ function draw(){
     drawLine(canonDirection);
     fill(150);
     noStroke();
-    circle(width/2, height-100, height/6);
+    imageMode(CENTER);
+    image(imageCanon, width/2, height-100, height/5, height/5 )
 
     
     //taskbar
@@ -124,23 +128,23 @@ function draw(){
     imageMode(CENTER);
     }
 
-    //Target
-    rectMode(CORNER);
+    //Target;
+    imageMode(CORNER)
     fill(200);
-    rect(targetX, targetY, targetwidth, targetheight);
-    rectMode(CENTER);
+    image(imageTarget,targetX, targetY, targetwidth+10, targetheight+10)
+    imageMode(CENTER);
 
     //number
-    textSize(height/20);
-    fill(255)
-    text((round(canonDirection)) , width/2, height-110);
+    textSize(height/30);
+    fill(0,250,255)
+    text((round(canonDirection)) , width/2, height-108);
 
     //buttons
     fill(30)
     ellipse(width/2 - 100, height-35, 85, 60)
     ellipse(width/2 + 100, height-35, 85, 60)
-    ellipse(width/2, height-38, 100, 70)
-    image(imageFire, width/2, height-60, 100, 100);
+    ellipse(width/2, height-35, 85, 50)
+    image(imageFire, width/2, height-60, 90, 90);
     image(imageRight,width/2 + 100, height-50, 80, 80);
     image(imageLeft, width/2 - 100, height-50, 80, 80);
 
@@ -276,7 +280,31 @@ function drawgameoverpage(){
         image(imageBackgroundDark, width/2+gamewidth/2,0,width/2+gamewidth/2+height*1.5,height);
         imageMode(CENTER);
         }
+    image(imageGameOver, width/2,height/4, gamewidth/2+150, gamewidth/2)
+    image(imageHeartEmpty, width/2, height/1.8, gamewidth/5, gamewidth/5)
+    image(imageHeartEmpty, width/2 - gamewidth/5, height/1.8, gamewidth/5, gamewidth/5)
+    image(imageHeartEmpty, width/2 + gamewidth/5, height/1.8, gamewidth/5, gamewidth/5)
 
+    rectMode(CENTER);
+    noStroke()
+    fill(20,20,20)
+    rect(width/2, height-100, gamewidth-100, 100);
+    textSize(gamewidth/10)
+    fill(150,50,50)
+    text("RETRY", width/2, height-75)
+
+    if(mouseIsPressed == true &&
+        mouseX >= width/2 - (gamewidth-100) &&
+        mouseX <= width/2 + (gamewidth-100) &&
+        mouseY >= height-100 - 100 &&
+        mouseY <= height-100 + 100){
+            score = 0;
+            life = 3;
+            gameover = false;
+            ingame = true;
+            startpage = false;
+
+        }
 
 }
 
@@ -289,12 +317,15 @@ function drawLine(angle){
 
     let x1 = width/2 + height/9 * Math.cos(rad);
     let y1 = height-100 + height/9 * Math.sin(rad);
-
+    stroke(30,30,60)
     line(x0,y0,x1,y1);
 }
 
 
 function drawProj() {
+    imageMode(CENTER);
+    image(imageBullet,projX,projY,projsize, projsize)
+    fill(255,255,255,0.5);
     circle(projX, projY, projsize);
     projX = projX + (projSpeedX * projSpeedMulti);
     projY = projY - (projSpeedY * projSpeedMulti);
@@ -346,7 +377,7 @@ function drawProj() {
 }
 function newTarget() {
     targetwidth = height/20;
-    targetheight = height/40;
+    targetheight = height/20;
     targetX = random((width/2)-(gamewidth/2), (width/2)+(gamewidth/2)-targetwidth)
     targetY = wallheight;
 }
