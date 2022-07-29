@@ -35,6 +35,7 @@ let startpage = false;
 let gameover = false;
 let ingame = true;
 
+let infotextsize = gamewidth/30;
 
 //------------------------------------------------
 
@@ -44,12 +45,15 @@ function preload() {
     imageLeft = loadImage('assets/ButtonLeftNew.png');
     imageRight = loadImage('assets/ButtonRightNew.png');
     imageFire = loadImage('assets/ButtonFireNew.png');
-    imageBackground = loadImage('assets/Sketches.png');
+    imageBackground = loadImage('assets/Sketches2.png');
+    imageBackgroundDark = loadImage('assets/Sketchesdark.png');
+    imageCanon = loadImage('assets/Canon.png');
+    imageBullet = loadImage('assets/Bullet.png');
+    imageTarget = loadImage('assets/Target.png');
     
 }
 
 function setup(){
-    const ctx = document.querySelector('canvas').getContext('2d');
     rectMode(CENTER);
     textAlign(CENTER);
     imageMode(CENTER);
@@ -75,7 +79,9 @@ function setup(){
 //--------------------------------------------------------------------------    
 function draw(){
     background(50);
-    image(imageBackground, width/2, height/2-500,)
+    imageMode(CORNERS);
+    image(imageBackground, (width/2)-(gamewidth/2),0,(width/2)+(gamewidth/2),height)
+    imageMode(CENTER);
     if ((localStorage.getItem('highscore')) == null){
         localStorage.setItem("highscore", 0)
     }
@@ -111,12 +117,12 @@ function draw(){
     rectMode(CENTER);
 
     //Wall L R
-    rectMode(CORNER)
-    fill(4)
-    rect(0,0,(width-gamewidth)/2, height)
-    rect(width/2+gamewidth/2+10,0,(width-gamewidth)/2,height)
-    rectMode(CENTER)
-    
+    if(width>height){
+    imageMode(CORNERS);
+    image(imageBackgroundDark, width/2-gamewidth/2-height*1.5,0,width/2-gamewidth/2,height);
+    image(imageBackgroundDark, width/2+gamewidth/2,0,width/2+gamewidth/2+height*1.5,height);
+    imageMode(CENTER);
+    }
 
     //Target
     rectMode(CORNER);
@@ -229,16 +235,47 @@ function draw(){
 //--------------------------------------------------------------------------
 
 function drawstartpage(){
-    fill(30)
-    ellipse(width/2 - 100, height-35, 85, 60)
-    ellipse(width/2 + 100, height-35, 85, 60)
-    ellipse(width/2, height-38, 100, 70)
-    image(imageFire, width/2, height-60, 100, 100);
-    image(imageRight,width/2 + 100, height-50, 80, 80);
-    image(imageLeft, width/2 - 100, height-50, 80, 80);
+      if(width>height){
+        imageMode(CORNERS);
+        image(imageBackgroundDark, width/2-gamewidth/2-height*1.5,0,width/2-gamewidth/2,height);
+        image(imageBackgroundDark, width/2+gamewidth/2,0,width/2+gamewidth/2+height*1.5,height);
+        imageMode(CENTER);
+        }
 
+    fill(255,255,255, 0.6)
+    rect(width/2,height/2,gamewidth,height)
+    fill(30)
+    ellipse(width/2 - 100, height-200, 85, 60)
+    ellipse(width/2 + 100, height-200, 85, 60)
+    ellipse(width/2, height-200, 100, 70)
+    image(imageFire, width/2, height-220, 100, 100);
+    image(imageRight,width/2 + 100, height-215, 80, 80);
+    image(imageLeft, width/2 - 100, height-215, 80, 80);
+    
+    const informationtext = "Shoot the target on top, but make it tricky.                        More bounces means more Points!"
+    textAlign(CORNER)
+    fill(0,0,0,1)
+    textSize(60)
+    text("HOW TO", width/2, height/2.5, 300, height/2);
+    textSize(20);
+    text(informationtext, width/2, height/2, 300, height/2);
+    text("Use the Arrowkeys or Buttons LEFT / RIGHT to aim.            And the key UP or the middle Button to shoot.                       don't hit yourself!", width/2, height-250, 300, height/2);
+    text("Press to start", width/1.6, height, 300, 250);
+    
+     if(mouseIsPressed == true || keyIsPressed == true){
+        gameover = false;
+        ingame = true;
+        startpage = false;
+    } 
 }
+
 function drawgameoverpage(){
+    if(width>height){
+        imageMode(CORNERS);
+        image(imageBackgroundDark, width/2-gamewidth/2-height*1.5,0,width/2-gamewidth/2,height);
+        image(imageBackgroundDark, width/2+gamewidth/2,0,width/2+gamewidth/2+height*1.5,height);
+        imageMode(CENTER);
+        }
 
 
 }
@@ -286,7 +323,7 @@ function drawProj() {
 
     if (projLifeTime >= projLifeTimeMax){
         if (hit == true){
-            score += 1 + score*bouncemultiplier;
+            score += 2 * bouncemultiplier;
             hit = false;
             if (score > localStorage.getItem("highscore")) {
                 localStorage.setItem("highscore", score);
